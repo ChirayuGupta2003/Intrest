@@ -59,7 +59,9 @@ def get_vals():
         graceDays_var.set('')
         interest_var.set('1')
         window.counter += 1
-        Sno_label.configure(text=window.counter)
+        Sno_label.configure(text=f"S.No {window.counter}")
+        interest_amt_label.configure(text=f"Interest amount = {interest_amt}")
+        total_amt_label.configure(text=f"Total amount = {amt + interest_amt}")
 
     wb.save("interest.xlsx")
 
@@ -132,8 +134,14 @@ rb2.grid(row=7, column=1)
 rb3.grid(row=8, column=1)
 rb4.grid(row=9, column=1)
 
+interest_amt_label = ttk.Label(window, text="")
+interest_amt_label.grid(row=10, column=0)
+
+total_amt_label = ttk.Label(window, text="")
+total_amt_label.grid(row=11, column=0)
+
 submitButton = ttk.Button(window, text="Submit", command=get_vals)
-submitButton.grid(row=10, column=2)
+submitButton.grid(row=12, column=2)
 
 # Error labels
 saleDate_error = ttk.Label(window, text="")
