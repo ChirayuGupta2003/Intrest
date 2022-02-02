@@ -3,6 +3,7 @@ from tkinter import ttk
 from datetime import datetime
 from openpyxl import Workbook, load_workbook
 from string import ascii_lowercase as al
+from tkinter import messagebox
 
 try:
     wb = load_workbook("interest.xlsx")
@@ -24,7 +25,6 @@ except FileNotFoundError:
     ]
     for n in range(len(titles)):
         ws[f"{al[n]}1"] = titles[n]
-
 
 window = tk.Tk()
 window.geometry("400x500")
@@ -50,20 +50,24 @@ def get_vals():
         else:
             interest_amt = ((amt * interest / 100) / 365) * ((receivedDate - saleDate).days - graceDays)
 
-        ws.append([window.counter, saleDate.date(), amt, receivedDate.date(), (receivedDate - saleDate).days, graceDays,
-                   (receivedDate - saleDate).days - graceDays, f"{interest}%", interest_amt, amt + interest_amt])
+        ws.append(
+            [int(window.counter), saleDate.date(), float(amt), receivedDate.date(), int((receivedDate - saleDate).days),
+             int(graceDays), int((receivedDate - saleDate).days - graceDays), float(interest), float(interest_amt),
+             float(amt + interest_amt)])
 
-        saleDate_var.set('')
-        amt_var.set('')
-        receivedDate_var.set('')
-        graceDays_var.set('')
-        interest_var.set('1')
-        window.counter += 1
-        Sno_label.configure(text=f"S.No {window.counter}")
-        interest_amt_label.configure(text=f"Interest amount = {interest_amt}")
-        total_amt_label.configure(text=f"Total amount = {amt + interest_amt}")
-
-    wb.save("interest.xlsx")
+        try:
+            saleDate_var.set('')
+            amt_var.set('')
+            receivedDate_var.set('')
+            graceDays_var.set('')
+            interest_var.set('1')
+            window.counter += 1
+            Sno_label.configure(text=f"S.No {window.counter}")
+            interest_amt_label.configure(text=f"Interest amount = {round(interest_amt, 2)}")
+            total_amt_label.configure(text=f"Total amount = {amt + round(interest_amt, 2)}")
+            wb.save("interest.xlsx")
+        except PermissionError as e:
+            messagebox.showerror(str(e), "Close the file before submitting")
 
 
 def check_vals(var):
